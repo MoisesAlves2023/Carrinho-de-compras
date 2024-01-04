@@ -43,10 +43,13 @@ align-self: flex-start;
 
 export const ContainerProduct = styled.View`
 background-color: #FFF;
-margin-top: 5px;
+padding-top: 14px;
+border-radius: 2px;
+padding: 8px;
+padding-bottom: 14px;
+margin-bottom: 14px;
 align-items: center;
 flex-direction: row;
-border-radius: 5px;
 justify-content: space-between;
 border-width: 1px;	
 `
