@@ -209,7 +209,7 @@ export default function Home() {
       price: 30
     },
   ]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState([]); // Carrinho de compras
 
   const addToCart = (product) => {
     const existingProduct = cart.find((item) => item.id === product.id);
@@ -222,10 +222,17 @@ export default function Home() {
   };
 
   useEffect(() => {
-    // Calculate the number of items in the cart dynamically
+    // Calcular dinamicamente o número de itens no carrinho
     const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
     navigation.setParams({ itemCount });
   }, [cart, navigation]);
+
+  useEffect(() => {
+    // Limpar o carrinho ao desmontar o componente
+    return () => {
+      setCart([]);
+    };
+  }, []);
 
   const goToCart = () => {
     navigation.navigate('Cart', { cartItems: cart, setCartItems: setCart });

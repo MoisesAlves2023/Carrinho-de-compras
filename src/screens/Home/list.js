@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ContainerProduct, TextProducts, Product } from './styles';
@@ -8,11 +9,11 @@ export default function List({ data, addToCart }) {
     <ContainerProduct>
       <Product>
         <TextProducts>{data.name}</TextProducts>
-        <TouchableOpacity onPress={() => addToCart(data)}>
-          <Icon name='plus-square' size={35} color={'green'} />
-        </TouchableOpacity>
+        <TextProducts>R$ {data.price}</TextProducts>
       </Product>
-      <TextProducts>R$ {data.price}</TextProducts>
+      <TouchableOpacity onPress={() => addToCart(data)}>
+        <Icon name='plus-square' size={35} color={'green'} />
+      </TouchableOpacity>
     </ContainerProduct>
   );
 }

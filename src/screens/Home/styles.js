@@ -42,26 +42,16 @@ align-self: flex-start;
 `
 
 export const ContainerProduct = styled.View`
-width: 100%;
-height: 90px;
-flex: 1;
 background-color: #FFF;
 margin-top: 5px;
 align-items: center;
+flex-direction: row;
 border-radius: 5px;
-justify-content: start;
+justify-content: space-between;
 border-width: 1px;	
 `
 export const Product = styled.View`
-width: 100%;
-height: 100px;
-flex-direction: row;
-flex: 1;
-background-color: #FFF;
-margin-top: 5px;
-align-items: center;
-border-radius: 5px;
-justify-content: space-between;	
+
 `
 export const CartIcon = styled.View`
   position: relative;
