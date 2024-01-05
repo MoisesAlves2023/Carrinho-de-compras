@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList, TouchableOpacity, View, Text } from 'react-native';
+import { FlatList, TouchableOpacity, View, Text, StyleSheet, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Container, Header, Title, CartIcon, CartBadge } from './styles';
 import Icon from 'react-native-vector-icons/Feather';
 import List from './list';
 import { useNavigation } from '@react-navigation/native';
+import CustomModalContent from '../../Components/modal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const navigation = useNavigation()
+  const [modalVisible, setModalVisible] = useState(false)
   const [products, setProducts] = useState([
     {
       id: '1',
@@ -222,6 +225,17 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Recupere os produtos salvos no AsyncStorage
+    AsyncStorage.getItem('products')
+        .then((storedProducts) => {
+            if (storedProducts) {
+                setProducts(JSON.parse(storedProducts));
+            }
+        })
+        .catch(error => console.error('Erro ao recuperar produtos do AsyncStorage:', error));
+}, []);
+
+  useEffect(() => {
     // Calcular dinamicamente o número de itens no carrinho
     const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
     navigation.setParams({ itemCount });
@@ -238,6 +252,14 @@ export default function Home() {
     navigation.navigate('Cart', { cartItems: cart, setCartItems: setCart });
   };
 
+  const OpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <Container>
       <Header>
@@ -252,15 +274,47 @@ export default function Home() {
             )}
           </CartIcon>
         </TouchableOpacity>
+        <TouchableOpacity onPress={OpenModal}>
+          <Icon name='plus' size={35} />
+        </TouchableOpacity>
       </Header>
-
-      <FlatList
-        data={products}
-        renderItem={({ item }) => (
-          <List data={item} addToCart={() => addToCart(item)} />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      <TouchableWithoutFeedback onPress={closeModal}>
+        <FlatList
+          data={products}
+          renderItem={({ item }) => (
+            <List data={item} addToCart={() => addToCart(item)} />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </TouchableWithoutFeedback>
+  
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <CustomModalContent closeModal={closeModal} products={products} addProduct={setProducts} />
+          </View>
+        </View>
+      </Modal>
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // fundo escuro semi-transparente
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+});

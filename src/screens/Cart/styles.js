@@ -44,3 +44,13 @@ export const TotalValue = styled.Text`
   margin-bottom: 20px;
   text-align: center;
 `;
+
+export const ClearCart = styled.TouchableOpacity`
+width:80%;
+height: 60px;
+align-items: center;
+justify-content: center;
+background-color: red;
+border-radius: 5px;
+
+`

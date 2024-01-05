@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import {
   Container,
   ProductContainer,
@@ -8,6 +8,7 @@ import {
   QuantityContainer,
   QuantityText,
   TotalValue,
+  ClearCart
 } from './styles';
 
 import Icon from 'react-native-vector-icons/Feather';
@@ -17,6 +18,26 @@ export default function Cart({ route }) {
 
   const [cart, setCart] = useState(cartItems);
 
+  function Reset() {
+    Alert.alert(
+      'Deseja limpar o carrinho?',
+      '',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Limpar',
+          onPress: () => {
+            setCart([]);
+            setCartItems([]);
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   const getTotalValue = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
@@ -34,7 +55,7 @@ export default function Cart({ route }) {
 
     setCart(filteredCart);
     setCartItems(filteredCart);
-     // Update the parent component's state
+    // Update the parent component's state
   };
 
   const handleIncreaseQuantity = (itemId) => {
@@ -67,6 +88,11 @@ export default function Cart({ route }) {
         </ProductContainer>
       ))}
       <TotalValue>Valor Total: R$ {getTotalValue().toFixed(2)}</TotalValue>
+      <View style={{alignItems:'center', justifyContent: 'center', marginBottom: 8}}>
+        <ClearCart onPress={Reset} style={{ backgroundColor: 'red' }}>
+          <Text style={{fontSize: 22, color:'white'}}>Limpar Carrinho</Text>
+        </ClearCart>
+      </View>
     </Container>
   );
 }
